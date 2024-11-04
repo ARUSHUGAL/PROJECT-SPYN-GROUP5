@@ -71,3 +71,127 @@ while 1
     end
 end
 CloseKeyboard();
+
+
+
+
+
+% Your main script code here
+
+% Call the manual control function
+manualControl(brick, leftMotorPort, rightMotorPort, grannyLifterPort);
+
+% All function definitions below
+function moveForward(brick, leftMotorPort, rightMotorPort)
+    % Function to move the robot forward
+    brick.MoveMotor(leftMotorPort, 44);
+    brick.MoveMotor(rightMotorPort, 50);
+end
+
+function stopMotors(brick, leftMotorPort, rightMotorPort)
+    % Function to stop both motors
+    brick.StopMotor(leftMotorPort);
+    brick.StopMotor(rightMotorPort);
+end
+
+function performObstacleAvoidance(brick, leftMotorPort, rightMotorPort)
+    % Function to handle obstacle avoidance behavior
+    pause(0.5);
+    stopMotors(brick, leftMotorPort, rightMotorPort);
+    brick.MoveMotor(leftMotorPort, -20); % Move backward
+    brick.MoveMotor(rightMotorPort, -20);
+    pause(1.2);
+    brick.MoveMotor(leftMotorPort, -20); % Turn slightly
+    brick.MoveMotor(rightMotorPort, 15);
+    pause(2);
+    stopMotors(brick, leftMotorPort, rightMotorPort);
+    moveForward(brick, leftMotorPort, rightMotorPort);
+    pause(1.4);
+end
+
+function handleNoObstacle(brick, leftMotorPort, rightMotorPort)
+    % Function to handle movement when no obstacles are detected
+    stopMotors(brick, leftMotorPort, rightMotorPort);
+    pause(0.5);
+    brick.MoveMotor(rightMotorPort, -20); % Move backward slightly
+    brick.MoveMotor(leftMotorPort, 25);
+    pause(1.2);
+    moveForward(brick, leftMotorPort, rightMotorPort);
+end
+
+function performTouchActivatedBehavior(brick, leftMotorPort, rightMotorPort, grannyLifterPort)
+    % Function for behavior when touch sensor is activated
+    stopMotors(brick, leftMotorPort, rightMotorPort);
+    pause(0.5);
+    brick.MoveMotor(leftMotorPort, -20); % Move backward
+    brick.MoveMotor(rightMotorPort, -20);
+    pause(1.5);
+    brick.MoveMotor(leftMotorPort, 20); % Turn slightly
+    brick.MoveMotor(rightMotorPort, -15);
+    pause(2);
+    moveForward(brick, leftMotorPort, rightMotorPort);
+end
+
+function manualControl(brick, leftMotorPort, rightMotorPort, grannyLifterPort)
+    % Function for manual control mode
+    global key;  % Ensure key is accessible
+    speed = 150;  % Normal speed
+    gSpeed = 30;  % Gentle speed
+    InitKeyboard(); % Initialize keyboard input
+
+    while true
+        pause(0.1); % Short pause for key press detection
+
+        switch key
+            case 'uparrow'
+                disp('Up Arrow Pressed!');
+                moveForward(brick, leftMotorPort, rightMotorPort);
+            case 'downarrow'
+                disp('Down Arrow Pressed!');
+                brick.MoveMotor(leftMotorPort, -speed);
+                brick.MoveMotor(rightMotorPort, -speed);
+            case 'leftarrow'
+                disp('Left Arrow Pressed!');
+                brick.MoveMotor(leftMotorPort, -speed);
+                brick.MoveMotor(rightMotorPort, speed);
+            case 'rightarrow'
+                disp('Right Arrow Pressed!');
+                brick.MoveMotor(leftMotorPort, speed);
+                brick.MoveMotor(rightMotorPort, -speed);
+            case 'w'
+                disp('W Key Pressed for gentle forward movement!');
+                brick.MoveMotor(leftMotorPort, gSpeed);
+                brick.MoveMotor(rightMotorPort, gSpeed);
+            case 's'
+                disp('S Key Pressed for gentle backward movement!');
+                brick.MoveMotor(leftMotorPort, -gSpeed);
+                brick.MoveMotor(rightMotorPort, -gSpeed);
+            case 'a'
+                disp('A Key Pressed for gentle left turn!');
+                brick.MoveMotor(leftMotorPort, -gSpeed);
+                brick.MoveMotor(rightMotorPort, gSpeed);
+            case 'd'
+                disp('D Key Pressed for gentle right turn!');
+                brick.MoveMotor(leftMotorPort, gSpeed);
+                brick.MoveMotor(rightMotorPort, -gSpeed);
+            case 'r' % Lift object
+               disp('Lifting object');
+            brick.MoveMotorAngleRel(grannyLifter, -10, 30, 'Brake');
+                disp('Lifting object');
+            case 'f' % Lower object
+               disp('Lowering object');
+            brick.MoveMotorAngleRel(grannyLifter, 10, 10, 'Brake');
+
+            case 0
+                disp('No Key Pressed!');
+                stopMotors(brick, leftMotorPort, rightMotorPort);
+                brick.StopMotor(grannyLifterPort, 'Brake');
+                brick.ResetMotorAngle(grannyLifterPort); % Reset angle if no key is pressed
+            case 'q'
+                disp('Exiting Program...');
+                break; % Exit the manual control loop
+        end
+    end
+    CloseKeyboard(); % Clean up on exit
+end
+
