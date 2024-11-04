@@ -1,5 +1,4 @@
-% Initialize the connection with the LEGO Mindstorm EV3 brick named 'TWERKINATOR'
-brick = ConnectBrick('TWERKINATOR');
+
 
 % Set the color sensor to mode 3 (ColorCode) and the touch sensor to mode 2 (Binary)
 brick.SetColorMode(3, 2);
