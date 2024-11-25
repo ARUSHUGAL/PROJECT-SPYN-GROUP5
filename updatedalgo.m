@@ -31,6 +31,9 @@ while true
     if brick.TouchPressed(killSwitchPort)
         brick.MoveMotor(leftMotor, 0);
         brick.MoveMotor(rightMotor, 0);
+        brick.beep();
+        pause(1);
+        brick.beep();
         disp('Kill switch activated! Motors stopped.');
         break;  % Exit the loop to stop the program
     end
@@ -59,6 +62,9 @@ while true
         % Stop immediately when the touch sensor is pressed
         brick.StopMotor(leftMotor, 'Brake');
         brick.StopMotor(rightMotor, 'Brake');
+          brick.beep();
+          pause(1);
+          brick.beep();
         disp('Obstacle detected in front, reversing for 0.7 seconds...');
         
         % Reverse for 0.9 seconds
