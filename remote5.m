@@ -1,77 +1,78 @@
-
 global key;
 leftMotorPort = 'C';
 rightMotorPort = 'A';
 grannyLifter = 'B';
 speed = 150;
 gSpeed = 30;
-InitKeyboard();
-while 1
-pause(0.1);
 
-switch key
-case 'uparrow'
-disp('Up Arrow Pressed!');
-brick.MoveMotor(leftMotorPort, speed);
-brick.MoveMotor(rightMotorPort, speed);
+InitKeyboard(); % Initialize keyboard control
 
-case 'downarrow'
-disp('Down Arrow Pressed!');
-brick.MoveMotor(leftMotorPort, -speed);
-brick.MoveMotor(rightMotorPort, -speed);
+while true
+    pause(0.1); % Small delay for smoother control
+    switch key
+        case 'uparrow'
+            disp('Up Arrow Pressed!');
+            brick.MoveMotor(leftMotorPort, speed);
+            brick.MoveMotor(rightMotorPort, speed);
 
-case 'leftarrow'
-disp('Left Arrow Pressed!');
-brick.MoveMotor(leftMotorPort, -speed);
-brick.MoveMotor(rightMotorPort, speed);
+        case 'downarrow'
+            disp('Down Arrow Pressed!');
+            brick.MoveMotor(leftMotorPort, -speed);
+            brick.MoveMotor(rightMotorPort, -speed);
 
-case 'rightarrow'
-disp('Right Arrow Pressed!');
-brick.MoveMotor(leftMotorPort, speed);
-brick.MoveMotor(rightMotorPort, -speed);
+        case 'leftarrow'
+            disp('Left Arrow Pressed!');
+            brick.MoveMotor(leftMotorPort, -speed);
+            brick.MoveMotor(rightMotorPort, speed);
 
-case 'w'
-disp('W Arrow Pressed!');
-brick.MoveMotor(leftMotorPort, gSpeed);
-brick.MoveMotor(rightMotorPort, gSpeed);
+        case 'rightarrow'
+            disp('Right Arrow Pressed!');
+            brick.MoveMotor(leftMotorPort, speed);
+            brick.MoveMotor(rightMotorPort, -speed);
 
-case 's'
-disp('S Arrow Pressed!');
-brick.MoveMotor(leftMotorPort, -gSpeed);
-brick.MoveMotor(rightMotorPort, -gSpeed);
+        case 'w'
+            disp('W Key Pressed for gentle forward movement!');
+            brick.MoveMotor(leftMotorPort, gSpeed);
+            brick.MoveMotor(rightMotorPort, gSpeed);
 
-case 'a'
-disp('A Pressed!');
-brick.MoveMotor(leftMotorPort, -gSpeed);
-brick.MoveMotor(rightMotorPort, gSpeed);
+        case 's'
+            disp('S Key Pressed for gentle backward movement!');
+            brick.MoveMotor(leftMotorPort, -gSpeed);
+            brick.MoveMotor(rightMotorPort, -gSpeed);
 
-case 'd'
-disp('D Pressed!');
-brick.MoveMotor(leftMotorPort, gSpeed);
-brick.MoveMotor(rightMotorPort, -gSpeed);
+        case 'a'
+            disp('A Key Pressed for gentle left turn!');
+            brick.MoveMotor(leftMotorPort, -gSpeed);
+            brick.MoveMotor(rightMotorPort, gSpeed);
 
-case 'r'
+        case 'd'
+            disp('D Key Pressed for gentle right turn!');
+            brick.MoveMotor(leftMotorPort, gSpeed);
+            brick.MoveMotor(rightMotorPort, -gSpeed);
 
-brick.MoveMotorAngleRel(grannyLifter, -10, 30, 'Brake');
-brick.WaitForMotor(grannyLifter);
-disp('Lifting object');
+        case 'r' % Lift object
+            disp('Lifting object...');
+            brick.MoveMotorAngleRel(grannyLifter, -10, 30, 'Brake');
+            brick.WaitForMotor(grannyLifter);
 
-case 'f'
+        case 'f' % Lower object
+            disp('Lowering object...');
+            brick.MoveMotorAngleRel(grannyLifter, 10, 30, 'Brake');
+            brick.WaitForMotor(grannyLifter);
 
-brick.MoveMotorAngleRel(grannyLifter, 10, 10, 'Brake');
-brick.WaitForMotor(grannyLifter);
-disp('Lowering object');
+        case 0
+            disp('No Key Pressed!');
+            brick.StopMotor(leftMotorPort, 'Brake');
+            brick.StopMotor(rightMotorPort, 'Brake');
+            brick.StopMotor(grannyLifter, 'Brake');
 
-case 0
-disp('No Key Pressed!');
-brick.StopMotor(leftMotorPort, 'Brake');
-brick.StopMotor(rightMotorPort, 'Brake');
-brick.StopMotor(grannyLifter, 'Brake');
-brick.ResetMotorAngle(grannyLifter);
+        case 'q'
+            disp('Exiting Program...');
+            break; % Exit the loop
 
-case 'q'
-disp('Exiting Program...');
-break;
+        otherwise
+            disp('Invalid Key Pressed!');
+    end
 end
-end
-CloseKeyboard();
+
+CloseKeyboard(); % Clean up on exit
