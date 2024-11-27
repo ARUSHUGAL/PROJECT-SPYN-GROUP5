@@ -39,9 +39,10 @@ while true
         disp('Plenty of space ahead (distance > 30 cm), turning left...');
         pause(0.6);  % Wait a little to get past the wall
         brick.StopMotor('AC', 'Brake');  % Stop both motors
-        brick.MoveMotor('C', -46.2);  % Move left motor backward
-        pause(1.71);  % Turn left for 1.5 seconds (adjust time for sharpness)
-        brick.StopMotor('C', 'Brake');  % Stop the left motor
+        brick.MoveMotor(leftMotor, reverseSpeed);  % Left motor moves backward
+        brick.MoveMotor(rightMotor, turnSpeedLeft);   % Right motor moves forward with adjusted speed
+        pause(0.5);  % Adjust the time for a sharper 90-degree left turn
+        brick.StopMotor('AC', 'Brake'); % Stop both motros
         brick.MoveMotor('C', leftMotorSpeed);  % Move left motor forward
         brick.MoveMotor('A', rightMotorSpeed);  % Move right motor forward
         pause(2);  % Resume moving forward for 2 seconds
@@ -94,13 +95,13 @@ while true
     % Adjust position if robot is too close or too far from the left wall
     if leftWallDistance < alignmentThresholdNear  % Too close to the left wall
         disp('Too close to the left wall. Moving slightly to the right...');
-        brick.MoveMotor(leftMotor, rightMotorSpeed);  % Move left motor at normal speed
-        brick.MoveMotor(rightMotor, rightMotorSpeed); % Move right motor at normal speed
+        brick.MoveMotor(leftMotor, leftMotorSpeed + 5);  % Move left motor at normal speed
+        brick.MoveMotor(rightMotor, rightMotorSpeed - 5); % Move right motor at normal speed
         pause(0.3);  % Adjust the robot to move slightly away from the wall
     elseif leftWallDistance > alignmentThresholdFar  % Too far from the left wall
         disp('Too far from the left wall. Moving slightly to the left...');
-        brick.MoveMotor(leftMotor, leftMotorSpeed);   % Move left motor at normal speed
-        brick.MoveMotor(rightMotor, rightMotorSpeed); % Move right motor at normal speed
+        brick.MoveMotor(leftMotor, leftMotorSpeed - 5);   % Move left motor at normal speed
+        brick.MoveMotor(rightMotor, rightMotorSpeed + 5); % Move right motor at normal speed
         pause(0.3);  % Adjust the robot to move slightly closer to the wall
     end
     % Keep moving forward without any new decision
