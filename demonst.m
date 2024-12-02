@@ -1,4 +1,22 @@
-% Main control loop
+% Setup the sensors and motor ports
+brick.SetColorMode(1, 2);  % Set color sensor to Color Code mode (COL-COLOR)
+
+% Sensor and motor ports
+ultrasonicPort = 2;         % Ultrasonic sensor port (for detecting obstacles)
+touchPortFront = 4;         % Front touch sensor port (for detecting obstacles in front)
+killSwitchPort = 3;         % Kill switch touch sensor port
+leftMotor = 'C';            % Left motor port
+rightMotor = 'A';           % Right motor port
+grannyLifter = 'B';         % Granny lifter motor port
+colorSensorPort = 1;        % Color sensor port (adjust as needed)
+
+% Define motor speeds (these can be adjusted at the start)
+leftMotorSpeed = 63;        % Speed for left motor
+rightMotorSpeed = 60;       % Speed for right motor
+turnSpeedLeft = 75;         % Speed for left turn
+turnSpeedRight = 85;        % Speed for right turn
+reverseSpeed = -60;         % Speed for reverse
+manualControlFlag = false;  % Flag to track if manual control is active
 while true
     % Check if kill switch is pressed
     if brick.TouchPressed(killSwitchPort)
