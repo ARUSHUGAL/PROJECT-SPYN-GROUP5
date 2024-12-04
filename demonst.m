@@ -11,7 +11,7 @@ grannyLifter = 'B';         % Granny lifter motor port
 colorSensorPort = 1;        % Color sensor port (adjust as needed)
 
 % Define motor speeds (these can be adjusted at the start)
-leftMotorSpeed = 63;        % Speed for left motor
+leftMotorSpeed = 63.6;        % Speed for left motor
 rightMotorSpeed = 60;       % Speed for right motor
 turnSpeedLeft = 75;         % Speed for left turn
 turnSpeedRight = 85;        % Speed for right turn
